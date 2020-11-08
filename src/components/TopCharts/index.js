@@ -1,4 +1,5 @@
-import * as React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
+
 import {
   View,
   Dimensions,
@@ -14,38 +15,37 @@ import {
 
 import Carousel from 'react-native-snap-carousel';
 
+const data = [
+  {
+    title: "Rap",
+    image: require('../../../assets/images/artists/1.png')
+  },
+  {
+    title: "Trap",
+    image: require('../../../assets/images/artists/2.jpg')
+  },
+  {
+    title: "Rock",
+    image: require('../../../assets/images/artists/3.png')
+  },
+  {
+    title: "Blues",
+    image: require('../../../assets/images/artists/4.png')
+  },
+];
 const horizontalMargin = 20;
 const slider_width = Dimensions.get('window').width;
 const item_width = Math.round(slider_width * 0.84) - (Platform.OS === 'android' ? horizontalMargin : 0);
 
-export default class TopCharts extends React.Component {
+const TopCharts = props => {
+  const [entries, setEntries] = useState([]);
+  const carouselRef = useRef(null);
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      activeIndex: 0,
-      carouselItems: [
-        {
-          title: "Rap",
-          image: require('../../../assets/images/artists/1.png')
-        },
-        {
-          title: "Trap",
-          image: require('../../../assets/images/artists/2.jpg')
-        },
-        {
-          title: "Rock",
-          image: require('../../../assets/images/artists/3.png')
-        },
-        {
-          title: "Blues",
-          image: require('../../../assets/images/artists/4.png')
-        },
-      ]
-    }
-  }
+  useEffect(() => {
+    setEntries(data);
+  }, []);
 
-  _renderItem({ item, index }) {
+  const renderItem = ({ item, index }) => {
     return (
       <View
         style={{ alignItems: "center" }}
@@ -65,20 +65,20 @@ export default class TopCharts extends React.Component {
     );
   }
 
-  render() {
-    return (
-      <CardContainer>
-        <Carousel
-          ref={ref => this.carousel = ref}
-          data={this.state.carouselItems}
-          sliderWidth={slider_width}
-          itemWidth={item_width}
-          renderItem={this._renderItem}
-          inactiveSlideScale={0.89}
-          firstItem={1}
-        />
-      </CardContainer>
-    );
-  }
+  return (
+    <CardContainer>
+      <Carousel
+        ref={carouselRef}
+        data={entries}
+        sliderWidth={slider_width}
+        itemWidth={item_width}
+        renderItem={renderItem}
+        inactiveSlideScale={0.89}
+        firstItem={1}
+      />
+    </CardContainer>
+  );
 }
+
+export default TopCharts;
 
